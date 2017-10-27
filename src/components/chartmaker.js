@@ -1,40 +1,60 @@
 import React, { Component } from 'react';
 import ReactHighChart from 'react-highcharts/ReactHighstock.src'
 import $ from "jquery";
-
+import {findDOMNode} from 'react-dom';
 
 class Chart extends Component {
   constructor(props) {
     super(props);
-    this.state = {whatever:false}
+    this.state = {configuration:chartConfig}
   }
   componentDidMount() {
-    let chart = this.refs.chart.getChart();
+    //let chart = this.refs.chart.getChart();
     //chart.series[1].addPoint({x: 10, y: 12});
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
-    let testUrl = "https://www.highcharts.com/samples/data/jsonp.php?filename=MSFT-c.json&callback=?"
-    $.getJSON(testUrl,function(data){
-      chartConfig.series[0]={
-        name:"MSFT",
-        data:data
-      }
-      this.setState({whatever:true})
-    }.bind(this))
+    let msft = "https://www.highcharts.com/samples/data/jsonp.php?filename=MSFT-c.json&callback=?"
+    let apple = "https://www.highcharts.com/samples/data/jsonp.php?filename=AAPL-c.json&callback=?"
 
+    let allstocks=["MSFT", "GOOG","AAPL"]
+    let seriesCollect=[]
+    let stateCopy = {...this.state.configuration}
+    console.log(stateCopy)
+    allstocks.map((stock,idx)=>{
+
+      let url="https://www.highcharts.com/samples/data/jsonp.php?filename="+stock+"-c.json&callback=?"
+
+      $.getJSON(url,function(data){
+        seriesCollect.push({
+          name:stock,
+          data:data
+        })
+        if(allstocks.length===seriesCollect.length){
+          stateCopy.series = seriesCollect
+          this.setState({
+            configuration:stateCopy
+          })
+        }
+        //
+      }.bind(this))
+    })
   }
 
   render() {
-    console.log(chartConfig)
-    return (
-    <ReactHighChart config={chartConfig} ref='chart'/>
-    );
+    //console.log(chartConfig)
+
+      return (
+      <ReactHighChart config={this.state.configuration}/>
+      );
   }
 
 }
 
 const chartConfig = {
+    chart: {
+      height:"45%"
 
+    },
     rangeSelector: {
         selected: 4
     },
@@ -68,7 +88,9 @@ const chartConfig = {
         valueDecimals: 2,
         split: true
     },
-
+    navigator:{
+      height:80
+    },
     series: []
 };
 
