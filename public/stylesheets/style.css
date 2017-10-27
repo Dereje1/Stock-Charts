@@ -1,8 +1,12 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin-top: 50px;
 }
 
-a {
-  color: #00B7FF;
+body td, body th {
+  text-align: left;
+}
+
+body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover {
+  color: yellow;
+  text-decoration: none;
 }

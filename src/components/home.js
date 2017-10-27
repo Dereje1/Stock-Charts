@@ -1,10 +1,11 @@
 "use strict"
 import React from 'react';
-
+import Chart from './chartmaker'
+//
 class Home extends React.Component {
   render() {
     return(
-      <h1>Im home</h1>
+      <Chart/>
     )
   }
 }
