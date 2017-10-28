@@ -2,11 +2,34 @@ body {
   margin-top: 50px;
 }
 
-body td, body th {
-  text-align: left;
+body .loader {
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+  margin-top: 100px;
+  border: 20px solid white;
+  border-top-color: #72a6f9;
+  border-bottom-color: #72a6f9;
+  border-radius: 50%;
+  animation-name: chartloading;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover {
   color: yellow;
   text-decoration: none;
+}
+
+@keyframes chartloading {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(360deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(720deg) scale(1);
+  }
 }

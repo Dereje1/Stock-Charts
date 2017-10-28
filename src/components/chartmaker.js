@@ -1,51 +1,58 @@
 import React, { Component } from 'react';
 import ReactHighChart from 'react-highcharts/ReactHighstock.src'
-import $ from "jquery";
-import {findDOMNode} from 'react-dom';
+import axios from 'axios';
+
+import getAllStocks from './miscellaneous/dbstocks'
 
 class Chart extends Component {
   constructor(props) {
     super(props);
-    this.state = {configuration:chartConfig}
+    this.state = {
+      configuration:chartConfig,
+      loaded: false
+    }
   }
   componentDidMount() {
-    //let chart = this.refs.chart.getChart();
-    //chart.series[1].addPoint({x: 10, y: 12});
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
-
-    let msft = "https://www.highcharts.com/samples/data/jsonp.php?filename=MSFT-c.json&callback=?"
-    let apple = "https://www.highcharts.com/samples/data/jsonp.php?filename=AAPL-c.json&callback=?"
-
-    let allstocks=["MSFT", "GOOG","AAPL"]
-    let seriesCollect=[]
-    let stateCopy = {...this.state.configuration}
-    console.log(stateCopy)
-    allstocks.map((stock,idx)=>{
-
-      let url="https://www.highcharts.com/samples/data/jsonp.php?filename="+stock+"-c.json&callback=?"
-
-      $.getJSON(url,function(data){
-        seriesCollect.push({
-          name:stock,
-          data:data
-        })
-        if(allstocks.length===seriesCollect.length){
-          stateCopy.series = seriesCollect
-          this.setState({
-            configuration:stateCopy
+    this.startupCharts()
+  }
+  startupCharts(){
+    getAllStocks().then(function(allstocks){
+      //let allstocks=["FB","GOOG","MSFT","AAPL"]
+      let seriesCollect=[]
+      let stateCopy = {...this.state.configuration}
+      allstocks.map((stock,idx)=>{
+        let url="https://www.highcharts.com/samples/data/jsonp.php?filename="+stock+"-c.json&callback=?"
+        let localurl = "api/quand/"+stock
+        axios.get(localurl).then(function(response){
+          seriesCollect.push({
+            name:response.data.name,
+            data:response.data.data
           })
-        }
-        //
-      }.bind(this))
-    })
+          if(allstocks.length===seriesCollect.length){
+            stateCopy.series = seriesCollect
+            this.setState({
+              configuration:stateCopy,
+              loaded:true
+            })
+          }
+        }.bind(this))
+        .catch(function(err){
+          console.log(err)
+        })
+      })
+    }.bind(this))
   }
 
   render() {
-    //console.log(chartConfig)
+      if(this.state.loaded){
+        return (
+        <ReactHighChart config={this.state.configuration}/>
+        );
+      }
+      else{
+        return(<div className="loader"></div>)
+      }
 
-      return (
-      <ReactHighChart config={this.state.configuration}/>
-      );
   }
 
 }
