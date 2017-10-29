@@ -17,6 +17,47 @@ body .loader {
   animation-iteration-count: infinite;
 }
 
+body .input-group-btn {
+  color: #4bfc2f;
+}
+
+body .stocks {
+  background: white;
+  border: 2px solid grey;
+  color: black;
+  height: 100px;
+  font-size: 24px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-left: 5px;
+  font-family: 'Noto Serif', serif;
+  transition: all .5s ease-in;
+  /*no delay but can add that here as finalk param*/
+}
+
+body .stocks:hover {
+  background: grey;
+  color: white;
+}
+
+body .stocks .close {
+  margin-right: 5px;
+  background-color: inherit;
+  border: none;
+  color: red;
+  font-size: 40px;
+  opacity: 1;
+  text-shadow: none;
+}
+
+body .stocks .close:active {
+  background-color: inherit;
+}
+
+body .stocks .close:focus {
+  outline: none;
+}
+
 body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover {
   color: yellow;
   text-decoration: none;
@@ -27,7 +68,7 @@ body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover
     transform: rotate(0deg) scale(1);
   }
   50% {
-    transform: rotate(360deg) scale(1.2);
+    transform: rotate(360deg) scale(1.1);
   }
   100% {
     transform: rotate(720deg) scale(1);

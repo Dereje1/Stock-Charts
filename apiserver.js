@@ -36,6 +36,16 @@ app.post("/",function(req,res){
   })
 })
 
+app.delete('/:_id', function(req,res){
+  var query = {_id: req.params._id};
+  stocksdb.remove(query, function(err, stock){
+    if(err){
+    throw err;
+    }
+    res.json(query);
+  })
+})
+
 app.listen(3001,function(err){
   if(err){
     console.log(err)

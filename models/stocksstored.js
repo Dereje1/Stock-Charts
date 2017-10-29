@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var stocksschema = mongoose.Schema({
    symbol: String,
+   name: String,
    timestamp: Number
 });
 
