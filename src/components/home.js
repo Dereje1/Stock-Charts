@@ -29,14 +29,17 @@ class Home extends Component {
       }
       let seriesCollect=[]
       let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
-      allstocks.map((stock,idx)=>{
-        let stockurl = "api/quand/"+stock.symbol
+
+      let quandInterval=setInterval(()=>{//wait a full second before fetching quotes
+        console.log(" Running " + seriesCollect.length)
+        let stockurl = "api/quand/"+allstocks[seriesCollect.length].symbol
         axios.get(stockurl).then((response)=>{
           seriesCollect.push({
             name:response.data.name,
             data:response.data.data
           })
           if(allstocks.length===seriesCollect.length){
+            clearInterval(quandInterval)
             chartConfigCopy.series = seriesCollect
             this.setState({
               configuration:chartConfigCopy,
@@ -46,14 +49,19 @@ class Home extends Component {
           }
         })
         .catch(function(err){
+          clearInterval(quandInterval)
           console.log(err)
         })
-      })
+      },1000)
     })
   }
   addingStock(e){
     let stockSymbol = findDOMNode(this.refs.stockadd).value.trim()
     if(e.keyCode===13||e==="button"){
+      let currentSymbols = this.state.dbStocks.map((s)=>{
+        return s.symbol
+      })
+      if(currentSymbols.includes(stockSymbol.toUpperCase())){return;}
       addStock(stockSymbol).then(function(response){
         response[0].data._colorIndex = this.state.dbStocks.length
         let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
@@ -63,7 +71,7 @@ class Home extends Component {
         this.setState({
           configuration:chartConfigCopy,
           dbStocks: clientUpdate
-        })
+        },()=>{findDOMNode(this.refs.stockadd).value =""})
       }.bind(this))
     }
 
