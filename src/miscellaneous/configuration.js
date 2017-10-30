@@ -35,7 +35,20 @@ export const chartConfig = {//react high stock chart initial configuration
             showInNavigator: false
         }
     },
-
+    scrollbar:{
+      barBackgroundColor: 'gray',
+      barBorderRadius: 7,
+      barBorderWidth: 0,
+      buttonBackgroundColor: 'gray',
+      buttonBorderWidth: 0,
+      buttonArrowColor: 'yellow',
+      buttonBorderRadius: 7,
+      rifleColor: 'yellow',
+      trackBackgroundColor: 'white',
+      trackBorderWidth: 1,
+      trackBorderColor: 'silver',
+      trackBorderRadius: 7
+    },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
         valueDecimals: 2,

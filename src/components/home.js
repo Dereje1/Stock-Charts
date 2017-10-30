@@ -18,14 +18,15 @@ class Home extends Component {
       configuration:chartConfig,
       dbStocks:[],
       loaded: false,
-      message:""
+      message:"",
+      colorVar:0
     }
     this.addingStock=this.addingStock.bind(this)
   }
   componentDidMount() {
-    this.startupCharts()
+    this.startupChart()
   }
-  startupCharts(){
+  startupChart(){
     getAllStocks().then((allstocks)=>{//gets stocks from db
       if(!allstocks.length){
         this.setState({
@@ -85,9 +86,9 @@ class Home extends Component {
         this.setState({message: stockSymbol+" Already Included!"})
         return;}
       if(stockSymbol===""){return;}
-      addStock(stockSymbol).then(function(response){
+      addStock(stockSymbol).then((response)=>{
         if(!response[0].data.hasOwnProperty('quandl_error')){
-          response[0].data._colorIndex = this.state.dbStocks.length
+          response[0].data._colorIndex = this.state.dbStocks.length + this.state.colorVar
           let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
           let seriesUpdate = [...chartConfigCopy.series,{...response[0].data}]
           let clientUpdate = [...this.state.dbStocks,{...response[1]}]
@@ -95,18 +96,18 @@ class Home extends Component {
           this.setState({
             configuration:chartConfigCopy,
             dbStocks: clientUpdate,
-            message:"Added " + stockSymbol
+            message:response[1].name + " Added" ,
+            colorVar: this.state.colorVar + 1
           },()=>{findDOMNode(this.inputNode).value =""})
         }
         else{
-          this.setState({message: stockSymbol+" Not Found!"})
+          this.setState({message: stockSymbol+" Not Found!"},()=>{findDOMNode(this.inputNode).value =""})
         }
-      }.bind(this))
+      })
     }
-
   }
   deletingStock(stockID){
-    deleteStock(stockID).then(function(response){
+    deleteStock(stockID).then((response)=>{
       //find stock symbol from id
       let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
       let dbIndexofDeletion = this.state.dbStocks.findIndex((stock)=>{
@@ -123,9 +124,10 @@ class Home extends Component {
       this.setState({
         configuration:chartConfigCopy,
         dbStocks: clientUpdate,
-        message: nameToDelete+" Deleted"
+        message: nameToDelete+" Deleted",
+        colorVar: this.state.colorVar + 1
       })
-    }.bind(this))
+    })
   }
   render() {
       if(this.state.loaded){
@@ -136,14 +138,17 @@ class Home extends Component {
                 <ReactHighChart config={this.state.configuration}/>
               </Col>
             </Row>
+
             <Addstock
             inputRef={node => this.inputNode = node}
             onKeyDown={this.addingStock}
             buttonSubmit={this.addingStock}
             />
+
             <Stocklist stocks={this.state.dbStocks}
              onClick={this.deletingStock.bind(this)}
              />
+
              <Info message={this.state.message}/>
           </Grid>
         );
@@ -154,7 +159,5 @@ class Home extends Component {
   }
 
 }
-
-
 
 export default Home;

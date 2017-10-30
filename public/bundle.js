@@ -46683,7 +46683,8 @@ var Home = function (_Component) {
       configuration: _configuration.chartConfig,
       dbStocks: [],
       loaded: false,
-      message: ""
+      message: "",
+      colorVar: 0
     };
     _this.addingStock = _this.addingStock.bind(_this);
     return _this;
@@ -46692,11 +46693,11 @@ var Home = function (_Component) {
   _createClass(Home, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.startupCharts();
+      this.startupChart();
     }
   }, {
-    key: 'startupCharts',
-    value: function startupCharts() {
+    key: 'startupChart',
+    value: function startupChart() {
       var _this2 = this;
 
       (0, _clientcrud.getAllStocks)().then(function (allstocks) {
@@ -46748,6 +46749,8 @@ var Home = function (_Component) {
   }, {
     key: 'addingStock',
     value: function addingStock(e) {
+      var _this3 = this;
+
       var stockSymbol = (0, _reactDom.findDOMNode)(this.inputNode).value.trim().toUpperCase();
       if (e === 13 || e === "button") {
         var currentSymbols = this.state.dbStocks.map(function (s) {
@@ -46762,55 +46765,59 @@ var Home = function (_Component) {
           return;
         }
         (0, _clientcrud.addStock)(stockSymbol).then(function (response) {
-          var _this3 = this;
-
           if (!response[0].data.hasOwnProperty('quandl_error')) {
-            response[0].data._colorIndex = this.state.dbStocks.length;
-            var chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration));
+            response[0].data._colorIndex = _this3.state.dbStocks.length + _this3.state.colorVar;
+            var chartConfigCopy = JSON.parse(JSON.stringify(_this3.state.configuration));
             var seriesUpdate = [].concat(_toConsumableArray(chartConfigCopy.series), [_extends({}, response[0].data)]);
-            var clientUpdate = [].concat(_toConsumableArray(this.state.dbStocks), [_extends({}, response[1])]);
+            var clientUpdate = [].concat(_toConsumableArray(_this3.state.dbStocks), [_extends({}, response[1])]);
             chartConfigCopy.series = seriesUpdate;
-            this.setState({
+            _this3.setState({
               configuration: chartConfigCopy,
               dbStocks: clientUpdate,
-              message: "Added " + stockSymbol
+              message: response[1].name + " Added",
+              colorVar: _this3.state.colorVar + 1
             }, function () {
               (0, _reactDom.findDOMNode)(_this3.inputNode).value = "";
             });
           } else {
-            this.setState({ message: stockSymbol + " Not Found!" });
+            _this3.setState({ message: stockSymbol + " Not Found!" }, function () {
+              (0, _reactDom.findDOMNode)(_this3.inputNode).value = "";
+            });
           }
-        }.bind(this));
+        });
       }
     }
   }, {
     key: 'deletingStock',
     value: function deletingStock(stockID) {
+      var _this4 = this;
+
       (0, _clientcrud.deleteStock)(stockID).then(function (response) {
         //find stock symbol from id
-        var chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration));
-        var dbIndexofDeletion = this.state.dbStocks.findIndex(function (stock) {
+        var chartConfigCopy = JSON.parse(JSON.stringify(_this4.state.configuration));
+        var dbIndexofDeletion = _this4.state.dbStocks.findIndex(function (stock) {
           return stock._id === response._id;
         });
-        var nameToDelete = this.state.dbStocks[dbIndexofDeletion].name;
+        var nameToDelete = _this4.state.dbStocks[dbIndexofDeletion].name;
 
         var configIndexofDeletion = chartConfigCopy.series.findIndex(function (stock) {
           return nameToDelete === stock.name;
         });
         var seriesUpdate = [].concat(_toConsumableArray(chartConfigCopy.series.slice(0, configIndexofDeletion)), _toConsumableArray(chartConfigCopy.series.slice(configIndexofDeletion + 1)));
-        var clientUpdate = [].concat(_toConsumableArray(this.state.dbStocks.slice(0, dbIndexofDeletion)), _toConsumableArray(this.state.dbStocks.slice(dbIndexofDeletion + 1)));
+        var clientUpdate = [].concat(_toConsumableArray(_this4.state.dbStocks.slice(0, dbIndexofDeletion)), _toConsumableArray(_this4.state.dbStocks.slice(dbIndexofDeletion + 1)));
         chartConfigCopy.series = seriesUpdate;
-        this.setState({
+        _this4.setState({
           configuration: chartConfigCopy,
           dbStocks: clientUpdate,
-          message: nameToDelete + " Deleted"
+          message: nameToDelete + " Deleted",
+          colorVar: _this4.state.colorVar + 1
         });
-      }.bind(this));
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.state.loaded) {
         return _react2.default.createElement(
@@ -46827,7 +46834,7 @@ var Home = function (_Component) {
           ),
           _react2.default.createElement(_addstock2.default, {
             inputRef: function inputRef(node) {
-              return _this4.inputNode = node;
+              return _this5.inputNode = node;
             },
             onKeyDown: this.addingStock,
             buttonSubmit: this.addingStock
@@ -50736,7 +50743,6 @@ function getAllStocks() {
   //gets all the stocks that are in the database
   return new Promise(function (resolve, reject) {
     _axios2.default.get('/api/').then(function (response) {
-
       var symbolList = response.data.map(function (s) {
         return s.symbol;
       });
@@ -50829,7 +50835,20 @@ var chartConfig = exports.chartConfig = { //react high stock chart initial confi
             showInNavigator: false
         }
     },
-
+    scrollbar: {
+        barBackgroundColor: 'gray',
+        barBorderRadius: 7,
+        barBorderWidth: 0,
+        buttonBackgroundColor: 'gray',
+        buttonBorderWidth: 0,
+        buttonArrowColor: 'yellow',
+        buttonBorderRadius: 7,
+        rifleColor: 'yellow',
+        trackBackgroundColor: 'white',
+        trackBorderWidth: 1,
+        trackBorderColor: 'silver',
+        trackBorderRadius: 7
+    },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
         valueDecimals: 2,
