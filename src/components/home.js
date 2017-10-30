@@ -1,3 +1,4 @@
+"use strict"
 import React, { Component } from 'react';
 import ReactHighChart from 'react-highcharts/ReactHighstock.src'
 import axios from 'axios';
@@ -6,14 +7,18 @@ import {Grid,Col,Row,InputGroup,FormControl,Button,FormGroup,OverlayTrigger,Imag
 
 import Stocklist from './stockdesc'
 import {getAllStocks,addStock,deleteStock} from '../miscellaneous/clientcrud'
-import {chartConfig} from '../miscellaneous/otherinfo'
+import {chartConfig} from '../miscellaneous/configuration'
+import Addstock from './addstock'
+import Info from './infomodal'
+
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       configuration:chartConfig,
       dbStocks:[],
-      loaded: false
+      loaded: false,
+      message:""
     }
     this.addingStock=this.addingStock.bind(this)
   }
@@ -21,17 +26,18 @@ class Home extends Component {
     this.startupCharts()
   }
   startupCharts(){
-    getAllStocks().then((allstocks)=>{
+    getAllStocks().then((allstocks)=>{//gets stocks from db
       if(!allstocks.length){
         this.setState({
-          loaded:true
-        },()=>{return})
+          loaded:true,
+          dbStocks:allstocks,
+        })
+        return;
       }
       let seriesCollect=[]
       let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
 
       let quandInterval=setInterval(()=>{//wait a full second before fetching quotes
-        console.log(" Running " + seriesCollect.length)
         let stockurl = "api/quand/"+allstocks[seriesCollect.length].symbol
         axios.get(stockurl).then((response)=>{
           seriesCollect.push({
@@ -41,6 +47,19 @@ class Home extends Component {
           if(allstocks.length===seriesCollect.length){
             clearInterval(quandInterval)
             chartConfigCopy.series = seriesCollect
+            if(window.innerWidth>1100){
+              chartConfigCopy.chart.height = window.innerWidth /30 +"%"
+            }
+            else if(window.innerWidth>700){
+              chartConfigCopy.chart.height = window.innerWidth /12 +"%"
+            }
+            else if(window.innerWidth>500){
+              chartConfigCopy.chart.height = window.innerWidth /5 +"%"
+            }
+            else{
+              chartConfigCopy.chart.height = window.innerWidth /2 +"%"
+            }
+
             this.setState({
               configuration:chartConfigCopy,
               dbStocks:allstocks,
@@ -56,22 +75,32 @@ class Home extends Component {
     })
   }
   addingStock(e){
-    let stockSymbol = findDOMNode(this.refs.stockadd).value.trim()
-    if(e.keyCode===13||e==="button"){
+    let stockSymbol = findDOMNode(this.inputNode).value.trim().toUpperCase()
+    if(e===13||e==="button"){
       let currentSymbols = this.state.dbStocks.map((s)=>{
         return s.symbol
       })
-      if(currentSymbols.includes(stockSymbol.toUpperCase())){return;}
+      if(currentSymbols.includes(stockSymbol)){
+        findDOMNode(this.inputNode).value ="";
+        this.setState({message: stockSymbol+" Already Included!"})
+        return;}
+      if(stockSymbol===""){return;}
       addStock(stockSymbol).then(function(response){
-        response[0].data._colorIndex = this.state.dbStocks.length
-        let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
-        let seriesUpdate = [...chartConfigCopy.series,{...response[0].data}]
-        let clientUpdate = [...this.state.dbStocks,{...response[1]}]
-        chartConfigCopy.series=seriesUpdate
-        this.setState({
-          configuration:chartConfigCopy,
-          dbStocks: clientUpdate
-        },()=>{findDOMNode(this.refs.stockadd).value =""})
+        if(!response[0].data.hasOwnProperty('quandl_error')){
+          response[0].data._colorIndex = this.state.dbStocks.length
+          let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
+          let seriesUpdate = [...chartConfigCopy.series,{...response[0].data}]
+          let clientUpdate = [...this.state.dbStocks,{...response[1]}]
+          chartConfigCopy.series=seriesUpdate
+          this.setState({
+            configuration:chartConfigCopy,
+            dbStocks: clientUpdate,
+            message:"Added " + stockSymbol
+          },()=>{findDOMNode(this.inputNode).value =""})
+        }
+        else{
+          this.setState({message: stockSymbol+" Not Found!"})
+        }
       }.bind(this))
     }
 
@@ -93,13 +122,13 @@ class Home extends Component {
       chartConfigCopy.series=seriesUpdate
       this.setState({
         configuration:chartConfigCopy,
-        dbStocks: clientUpdate
+        dbStocks: clientUpdate,
+        message: nameToDelete+" Deleted"
       })
     }.bind(this))
   }
   render() {
       if(this.state.loaded){
-        const tooltip = (<Tooltip id="tooltip"><strong>Add Stock</strong></Tooltip>);
         return (
           <Grid>
             <Row style={{"marginTop":"25px"}}>
@@ -107,26 +136,21 @@ class Home extends Component {
                 <ReactHighChart config={this.state.configuration}/>
               </Col>
             </Row>
-            <Row style={{"marginTop":"25px"}}>
-                <Col xs={8} xsOffset={2}>
-                  <FormGroup>
-                    <InputGroup >
-                      <FormControl ref="stockadd"  type="text" onKeyDown={(e)=>this.addingStock(e)} style={{"height":"75px","borderRadius":"10px 0 0px 10px","fontSize":"20px"}} placeholder="Add stock symbol"/>
-                      <OverlayTrigger placement="bottom" overlay={tooltip}>
-                        <Button componentClass={InputGroup.Button} className="addstock" style={{"height":"75px","borderRadius":"0px 10px 10px 0px"}} type="submit" onClick ={()=>{this.addingStock("button")}}><span style={{"fontSize":"45px"}} className="fa fa-plus"/></Button>
-                      </OverlayTrigger>
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
-                <Stocklist stocks={this.state.dbStocks} onClick={this.deletingStock.bind(this)}/>
-            </Row>
+            <Addstock
+            inputRef={node => this.inputNode = node}
+            onKeyDown={this.addingStock}
+            buttonSubmit={this.addingStock}
+            />
+            <Stocklist stocks={this.state.dbStocks}
+             onClick={this.deletingStock.bind(this)}
+             />
+             <Info message={this.state.message}/>
           </Grid>
         );
       }
       else{
         return(<div className="loader"></div>)
       }
-
   }
 
 }

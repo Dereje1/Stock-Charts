@@ -1,13 +1,17 @@
 export const chartConfig = {//react high stock chart initial configuration
+
     chart: {
-      height:"45%"
+      backgroundColor: '#f5efff',
+      borderRadius: '10px',
+      height:"45%",
+      fontWeight: 'bold'
     },
     rangeSelector: {
         selected: 4
     },
 
     title: {
-        text: 'Stock Chart'
+        text: 'Relative Performance Stock Chart'
     },
 
     yAxis: {
@@ -15,7 +19,8 @@ export const chartConfig = {//react high stock chart initial configuration
             formatter: function() {
                 return (this.value > 0 ? ' + ' : '') + this.value + '%';
             },
-            format: '{value} %'
+            format: '{value} %',
+
         },
         plotLines: [{
             value: 0,

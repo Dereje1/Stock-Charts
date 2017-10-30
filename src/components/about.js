@@ -32,7 +32,7 @@ class About extends React.Component{
         aria-labelledby="contained-modal-title"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Night Life Coordination App</Modal.Title>
+          <Modal.Title id="contained-modal-title">Stock Charting App</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h5>Coded by <a href="https://www.freecodecamp.com/dereje1" target="_blank">DGetahun</a> with JavaScript.</h5>
@@ -46,27 +46,26 @@ class About extends React.Component{
               </thead>
               <tbody>
                 <tr>
-                  <td>React / Redux</td>
+                  <td>React</td>
                   <td> Express / Node.js</td>
                 </tr>
                 <tr>
-                  <td>Redux-Thunk</td>
+                  <td>React-HighCharts</td>
                   <td>Mongoose / Mongodb</td>
                 </tr>
                 <tr>
-                  <td>React-Bootstrap</td>
-                  <td>Passport.js</td>
+                  <td>React-Router</td>
+                  <td>axios</td>
                 </tr>
               </tbody>
             </Table>
           <h5> Data Sources:</h5>
           <ul>
-            <li><a href="https://www.yelp.com/developers/documentation/v3/get_started" target="_blank">Yelp Fusion API</a></li>
-            <li><a href="https://freegeoip.net/?q=2601:14d:8602:7460:cdf5:63c2:c2c:5fa8" target="_blank">freegeoip.net Geolocation API</a></li>
+            <li><a href="https://docs.quandl.com/docs/getting-started" target="_blank">Quandl API</a></li>
           </ul>
         </Modal.Body>
         <Modal.Footer>
-          <h6 className="pull-left">Source Code @ <a href="https://github.com/Dereje1/Night-Life" target="_blank">Github</a></h6>
+          <h6 className="pull-left">Source Code @ <a href="https://github.com/Dereje1/Stock-Charts" target="_blank">Github</a></h6>
           <Button onClick={this.close.bind(this)}>Close</Button>
         </Modal.Footer>
       </Modal>

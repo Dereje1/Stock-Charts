@@ -23,13 +23,17 @@ export function addStock(symb){//gets all the stocks that are in the database
         name:response.data.name,
         timestamp:Date.now()
       }
-      axios.post('/api/',stockFormat).then(function(addresp){
-          resolve([response,addresp.data])
-      })
-      .catch(function(err){
-        reject(err)
-      })
-
+      if(!response.data.hasOwnProperty('quandl_error')){
+        axios.post('/api/',stockFormat).then(function(addresp){
+            resolve([response,addresp.data])
+        })
+        .catch(function(err){
+          reject(err)
+        })
+      }
+      else{
+        resolve([response,[]])
+      }
     })
     .catch(function(err){
       reject(err)

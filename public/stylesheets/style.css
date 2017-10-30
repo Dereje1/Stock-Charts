@@ -21,11 +21,19 @@ body .input-group-btn {
   color: #4bfc2f;
 }
 
-body .stocks {
+body #stockContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+body #stockContainer .stocks {
   background: white;
   border: 2px solid grey;
   color: black;
-  height: 100px;
+  width: 200px;
+  height: 110px;
   font-size: 24px;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -35,26 +43,31 @@ body .stocks {
   /*no delay but can add that here as finalk param*/
 }
 
-body .stocks:hover {
+body #stockContainer .stocks:hover {
+  transform: translateY(-10px);
   background: grey;
   color: white;
 }
 
-body .stocks .close {
+body #stockContainer .stocks:hover .close {
+  color: #fc8f8f;
+}
+
+body #stockContainer .stocks .close {
   margin-right: 5px;
   background-color: inherit;
   border: none;
   color: red;
-  font-size: 40px;
-  opacity: 1;
+  font-size: 30px;
+  opacity: .75;
   text-shadow: none;
 }
 
-body .stocks .close:active {
+body #stockContainer .stocks .close:active {
   background-color: inherit;
 }
 
-body .stocks .close:focus {
+body #stockContainer .stocks .close:focus {
   outline: none;
 }
 
