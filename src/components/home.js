@@ -12,9 +12,9 @@ import Addstock from './addstock'
 import Info from './infomodal'
 
 import io from 'socket.io-client';
-//const socket = io('http://localhost:3001');
+const socket = io('http://localhost:3001');
 
-const socket = io('https://dereje-stock-charts.herokuapp.com/');
+//const socket = io('https://dereje-stock-charts.herokuapp.com/');
 class Home extends Component {
   constructor(props) {
     super(props);
