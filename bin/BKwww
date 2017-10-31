@@ -19,17 +19,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var io = require('socket.io')(server);//get socket
 
-io.on('connection', function(client){//socket connection
-  console.log("Connection Established!!!")
-  client.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-  client.on('client update', function(msg){//recieve message from client
-    io.emit('server update', msg);//send message back to all clients, if not wanting to send to the sending client then use i0.broadcast.emit
-  });
-});
 /**
  * Listen on provided port, on all network interfaces.
  */

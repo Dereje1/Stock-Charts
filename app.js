@@ -7,49 +7,16 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var getquandl = require('./thirdpartyapis/quandl')//gets quandl historical stock data
-
-
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-
-var db = require('./models/db') //mongoose required common db
-var stocksdb = require('./models/stocksstored') // stock schema for db
-
-app.get("/api/quand/:ticker",function(req,res){//gets historical data for one ticker
-  getquandl(req.params.ticker).then(function(stockdata){
-    res.json(stockdata)
-  })
-  .catch(function(err){
-    res.json(err)
-  })
+var httpProxy = require('http-proxy');
+// Set up PROXY server with the module from above
+const apiProxy = httpProxy.createProxyServer({
+  target:"http://localhost:3001"
 })
-app.get("/api/",function(req,res){//gets all tickers in the db
-  stocksdb.find({},function(err,allstocks){
-    if(err){throw err}
-    res.json(allstocks)
-  })
-})
-app.post("/api/",function(req,res){//adds one symbol to the db
-  let info=req.body;
-  stocksdb.create(info,function(err,stockadded){
-    if(err){throw(err)}
-    res.json(stockadded)
-  })
-})
+//apply middleware that intercepts all requests to the /api and retrieves the resources from the prxy
 
-app.delete('/api/:_id', function(req,res){//deletes 1 symbol from db
-  var query = {_id: req.params._id};
-  stocksdb.remove(query, function(err, stock){
-    if(err){
-    throw err;
-    }
-    res.json(query);
-  })
+app.use('/api',function(req,res){
+  apiProxy.web(req,res)
 })
-
 
 //server primary route
 app.use(express.static(path.join(__dirname, 'public')));
@@ -76,24 +43,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.end('error');
 });
-var port = (process.env.PORT || '3000');
-app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-
-//var server = http.createServer(app);
-var server = require('http').createServer(app);//needed to attach app to socket
-var io = require('socket.io')(server);//get socket
-io.on('connection', function(client){//socket connection
-  console.log("Connection Established!!!")
-  client.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-  client.on('client update', function(msg){//recieve message from client
-    io.emit('server update', msg);//send message back to all clients, if not wanting to send to the sending client then use i0.broadcast.emit
-  });
-});
-
-server.listen(port);
+module.exports = app;
