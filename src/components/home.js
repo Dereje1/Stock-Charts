@@ -13,7 +13,7 @@ import Info from './infomodal'
 import {deletion} from '../miscellaneous/socketing'
 
 import io from 'socket.io-client';
-const socket = io('http://localhost:3001');
+const socket = io('https://localhost:3001');
 
 class Home extends Component {
   constructor(props) {
