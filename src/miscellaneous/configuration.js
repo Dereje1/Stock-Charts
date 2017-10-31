@@ -1,4 +1,4 @@
-export const chartConfig = {//react high stock chart initial configuration
+export const chartConfig = {//react high stock chart initial configuration look @ https://api.highcharts.com/highstock/
 
     chart: {
       backgroundColor: '#f5efff',

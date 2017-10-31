@@ -55,7 +55,7 @@ class About extends React.Component{
                 </tr>
                 <tr>
                   <td>React-Router</td>
-                  <td>axios</td>
+                  <td>Socket.io</td>
                 </tr>
               </tbody>
             </Table>
