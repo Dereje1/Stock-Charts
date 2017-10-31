@@ -15,7 +15,7 @@ import Info from './infomodal'
 
 
 //const socket = io('//localhost:3001'); //establish socket connection as public , can not use this address on heroku
-const socket = io('https://dereje-stock-charts.herokuapp.com');
+const socket = io('https://dereje-stock-charts.herokuapp.com/api');
 class Home extends Component {
   constructor(props) {
     super(props);
