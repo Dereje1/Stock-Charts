@@ -10,7 +10,6 @@ import {getAllStocks,addStock,deleteStock} from '../miscellaneous/clientcrud'
 import {chartConfig} from '../miscellaneous/configuration'
 import Addstock from './addstock'
 import Info from './infomodal'
-import {deletion} from '../miscellaneous/socketing'
 
 import io from 'socket.io-client';
 //const socket = io('http://localhost:3001');

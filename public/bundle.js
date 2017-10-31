@@ -49927,8 +49927,6 @@ var _infomodal = __webpack_require__(400);
 
 var _infomodal2 = _interopRequireDefault(_infomodal);
 
-var _socketing = __webpack_require__(425);
-
 var _socket = __webpack_require__(401);
 
 var _socket2 = _interopRequireDefault(_socket);
@@ -57683,27 +57681,6 @@ var About = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = About;
-
-/***/ }),
-/* 425 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.deletion = deletion;
-
-var _socket = __webpack_require__(401);
-
-var _socket2 = _interopRequireDefault(_socket);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var socket = (0, _socket2.default)('http://localhost:3001');
-function deletion(currentstate) {}
 
 /***/ })
 /******/ ]);
