@@ -15,7 +15,7 @@ import Info from './infomodal'
 
 
 //const socket = io('//localhost:3001'); //establish socket connection as public , can not use this address on heroku
-const socket = io('https://dereje-stock-charts.herokuapp.com');
+const socket = io('https://dereje-stock-charts.herokuapp.com:443');
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +30,7 @@ class Home extends Component {
       this.updateStatefromSockets(newState)
     });
     this.addingStock=this.addingStock.bind(this)
+    this.deletingStock=this.deletingStock.bind(this)
   }
   componentDidMount() {
     this.startupChart()//run on every mount once,i.e. get data from db only once
@@ -125,7 +126,7 @@ class Home extends Component {
   }
   deletingStock(stockID){//recieves db id to delete stock with
     deleteStock(stockID).then((response)=>{
-      //find stock symbol from id
+      //find stock symbol from id , needed for config
       let chartConfigCopy = JSON.parse(JSON.stringify(this.state.configuration))
       let dbIndexofDeletion = this.state.dbStocks.findIndex((stock)=>{
         return (stock._id===response._id)
@@ -135,6 +136,7 @@ class Home extends Component {
       let configIndexofDeletion = chartConfigCopy.series.findIndex((stock)=>{
         return (nameToDelete===stock.name)
       })
+      //update both state array and config
       let seriesUpdate = [...chartConfigCopy.series.slice(0,configIndexofDeletion),...chartConfigCopy.series.slice(configIndexofDeletion+1)]
       let clientUpdate = [...this.state.dbStocks.slice(0,dbIndexofDeletion),...this.state.dbStocks.slice(dbIndexofDeletion+1)]
       chartConfigCopy.series=seriesUpdate
@@ -144,10 +146,11 @@ class Home extends Component {
         message: nameToDelete+" Deleted",
         colorVar: this.state.colorVar + 1
       })
-      socket.emit('client update', this.state)
+      socket.emit('client update', this.state) //emit deletion
     })
   }
   render() {
+      //note node => this.inputNode = node , call back function from input form
       if(this.state.loaded){
         return (
           <Grid>
@@ -164,7 +167,7 @@ class Home extends Component {
             />
 
             <Stocklist stocks={this.state.dbStocks}
-             onClick={this.deletingStock.bind(this)}
+             onClick={this.deletingStock}
              />
 
              <Info message={this.state.message}/>

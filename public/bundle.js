@@ -49945,7 +49945,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 //const socket = io('//localhost:3001'); //establish socket connection as public , can not use this address on heroku
-var socket = (0, _socket2.default)('https://dereje-stock-charts.herokuapp.com');
+var socket = (0, _socket2.default)('https://dereje-stock-charts.herokuapp.com:443');
 
 var Home = function (_Component) {
   _inherits(Home, _Component);
@@ -49967,6 +49967,7 @@ var Home = function (_Component) {
       _this.updateStatefromSockets(newState);
     });
     _this.addingStock = _this.addingStock.bind(_this);
+    _this.deletingStock = _this.deletingStock.bind(_this);
     return _this;
   }
 
@@ -50096,7 +50097,7 @@ var Home = function (_Component) {
 
       //recieves db id to delete stock with
       (0, _clientcrud.deleteStock)(stockID).then(function (response) {
-        //find stock symbol from id
+        //find stock symbol from id , needed for config
         var chartConfigCopy = JSON.parse(JSON.stringify(_this4.state.configuration));
         var dbIndexofDeletion = _this4.state.dbStocks.findIndex(function (stock) {
           return stock._id === response._id;
@@ -50106,6 +50107,7 @@ var Home = function (_Component) {
         var configIndexofDeletion = chartConfigCopy.series.findIndex(function (stock) {
           return nameToDelete === stock.name;
         });
+        //update both state array and config
         var seriesUpdate = [].concat(_toConsumableArray(chartConfigCopy.series.slice(0, configIndexofDeletion)), _toConsumableArray(chartConfigCopy.series.slice(configIndexofDeletion + 1)));
         var clientUpdate = [].concat(_toConsumableArray(_this4.state.dbStocks.slice(0, dbIndexofDeletion)), _toConsumableArray(_this4.state.dbStocks.slice(dbIndexofDeletion + 1)));
         chartConfigCopy.series = seriesUpdate;
@@ -50115,7 +50117,7 @@ var Home = function (_Component) {
           message: nameToDelete + " Deleted",
           colorVar: _this4.state.colorVar + 1
         });
-        socket.emit('client update', _this4.state);
+        socket.emit('client update', _this4.state); //emit deletion
       });
     }
   }, {
@@ -50123,6 +50125,7 @@ var Home = function (_Component) {
     value: function render() {
       var _this5 = this;
 
+      //note node => this.inputNode = node , call back function from input form
       if (this.state.loaded) {
         return _react2.default.createElement(
           _reactBootstrap.Grid,
@@ -50144,7 +50147,7 @@ var Home = function (_Component) {
             buttonSubmit: this.addingStock
           }),
           _react2.default.createElement(_stockdesc2.default, { stocks: this.state.dbStocks,
-            onClick: this.deletingStock.bind(this)
+            onClick: this.deletingStock
           }),
           _react2.default.createElement(_infomodal2.default, { message: this.state.message })
         );
@@ -54174,7 +54177,7 @@ var chartConfig = exports.chartConfig = { //react high stock chart initial confi
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+ // dumb component displays form for adding stock
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -54207,6 +54210,9 @@ var Addstock = function (_Component) {
 
   _createClass(Addstock, [{
     key: 'render',
+
+    // note ref of form going back thru props of this component back to home via
+    //  {node => this.inputNode = node } = ref
     value: function render() {
       var _this2 = this;
 

@@ -1,0 +1,32 @@
+http://localhost:3001   -->works locally
+bundle.js:56131 Mixed Content: The page at 'https://dereje-stock-charts.herokuapp.com/' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://localhost:3001/socket.io/?EIO=3&transport=polling&t=LzpWVxr'. This request has been blocked; the content must be served over HTTPS.
+
+https://dereje-stock-charts.herokuapp.com/socket.io/?EIO=3&transport=polling&t=LzpEItx (404 not found?)
+https://dereje-stock-charts.herokuapp.com/api/
+
+https://localhost:3001
+https://localhost:3001/socket.io/?EIO=3&transport=polling&t=LzpF0EC net::ERR_CONNECTION_CLOSED
+
+//localhost:3001 -->works locally
+https://localhost:3001/socket.io/?EIO=3&transport=polling&t=LzpFXs5 net::ERR_CONNECTION_CLOSED
+
+https://dereje-stock-charts.herokuapp.com
+https://dereje-stock-charts.herokuapp.com/socket.io/?EIO=3&transport=polling&t=LzpGhjt 404 (Not Found)
+
+https://dereje-stock-charts.herokuapp.com/api
+https://dereje-stock-charts.herokuapp.com/socket.io/?EIO=3&transport=polling&t=LzpN-sp 404 (Not Found)
+
+https://dereje-stock-charts.herokuapp.com:3001  --> Delayed reaction
+bundle.js:56131 GET https://dereje-stock-charts.herokuapp.com:3001/socket.io/?EIO=3&transport=polling&t=LzpYKqz net::ERR_CONNECTION_REFUSED
+
+wss://localhost:3001
+GET https://localhost:3001/socket.io/?EIO=3&transport=polling&t=LzpSOtJ net::ERR_CONNECTION_CLOSED
+
+'wss://dereje-stock-charts.herokuapp.com:3001 --> Delayed reaction
+ GET https://dereje-stock-charts.herokuapp.com:3001/socket.io/?EIO=3&transport=polling&t=LzpT3Pm net::ERR_CONNECTION_REFUSED
+
+wss://dereje-stock-charts.herokuapp.com
+POST https://dereje-stock-charts.herokuapp.com/socket.io/?EIO=3&transport=polling&t=LzpTyZ5 404 (Not Found)
+
+wss://dereje-stock-charts.herokuapp.com/api
+POST https://dereje-stock-charts.herokuapp.com/socket.io/?EIO=3&transport=polling&t=LzpUVpL 404 (Not Found)

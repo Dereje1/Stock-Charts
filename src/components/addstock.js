@@ -1,8 +1,9 @@
-"use strict"
+"use strict" // dumb component displays form for adding stock
 import React, { Component } from 'react';
 import {Col,Row,InputGroup,FormControl,Button,FormGroup,OverlayTrigger,Tooltip} from 'react-bootstrap'
 class Addstock extends Component {
-
+  // note ref of form going back thru props of this component back to home via
+//  {node => this.inputNode = node } = ref
   render() {
     const tooltip = (<Tooltip id="tooltip"><strong>Add Stock</strong></Tooltip>);
     return (
