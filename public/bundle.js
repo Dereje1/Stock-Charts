@@ -49945,7 +49945,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 //const socket = io('//localhost:3001'); //establish socket connection as public , can not use this address on heroku
-var socket = (0, _socket2.default)('https://dereje-stock-charts.herokuapp.com/localhost:3001');
+var socket = (0, _socket2.default)('https://dereje-stock-charts.herokuapp.com:3001');
 
 var Home = function (_Component) {
   _inherits(Home, _Component);
