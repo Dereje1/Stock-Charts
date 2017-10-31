@@ -6,6 +6,9 @@ export const chartConfig = {//react high stock chart initial configuration
       height:"45%",
       fontWeight: 'bold'
     },
+    credits:{
+      enabled:false
+    },
     rangeSelector: {
         selected: 4
     },

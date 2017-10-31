@@ -10,6 +10,10 @@ import {getAllStocks,addStock,deleteStock} from '../miscellaneous/clientcrud'
 import {chartConfig} from '../miscellaneous/configuration'
 import Addstock from './addstock'
 import Info from './infomodal'
+import {deletion} from '../miscellaneous/socketing'
+
+import io from 'socket.io-client';
+const socket = io('http://localhost:3001');
 
 class Home extends Component {
   constructor(props) {
@@ -21,10 +25,17 @@ class Home extends Component {
       message:"",
       colorVar:0
     }
+    socket.on('server update', (newState)=>{
+      this.updateStatefromSockets(newState)
+    });
     this.addingStock=this.addingStock.bind(this)
+    this.updateStatefromSockets =this.updateStatefromSockets.bind(this)
   }
   componentDidMount() {
     this.startupChart()
+  }
+  updateStatefromSockets(newstate){
+    this.setState(newstate)
   }
   startupChart(){
     getAllStocks().then((allstocks)=>{//gets stocks from db
@@ -99,6 +110,7 @@ class Home extends Component {
             message:response[1].name + " Added" ,
             colorVar: this.state.colorVar + 1
           },()=>{findDOMNode(this.inputNode).value =""})
+          socket.emit('client update', this.state)
         }
         else{
           this.setState({message: stockSymbol+" Not Found!"},()=>{findDOMNode(this.inputNode).value =""})
@@ -127,6 +139,7 @@ class Home extends Component {
         message: nameToDelete+" Deleted",
         colorVar: this.state.colorVar + 1
       })
+      socket.emit('client update', this.state)
     })
   }
   render() {

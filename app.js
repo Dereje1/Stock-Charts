@@ -8,9 +8,10 @@ var app = express();
 
 var httpProxy = require('http-proxy');
 // Set up PROXY server with the module from above
-const apiProxy = httpProxy.createProxyServer(
-  {target:"http://localhost:3001"}
-)
+const apiProxy = httpProxy.createProxyServer({
+  target:"http://localhost:3001",
+  ws: true
+})
 //apply middleware that intercepts all requests to the /api and retrieves the resources from the prxy
 
 app.use('/api',function(req,res){
@@ -40,7 +41,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.end('error');
 });
 
 module.exports = app;

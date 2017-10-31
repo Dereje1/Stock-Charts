@@ -3,12 +3,9 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-
 var getquandl = require('./thirdpartyapis/quandl')
 
 var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,17 +46,7 @@ app.delete('/:_id', function(req,res){
   })
 })
 
-io.on('connection', function(client){
-  console.log("Connection Established!!!")
-  client.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-  client.on('client update', function(msg){
-    io.emit('server update', msg);
-  });
-});
-
-server.listen(3001,function(err){
+app.listen(3001,function(err){
   if(err){
     console.log(err)
   }

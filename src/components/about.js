@@ -50,7 +50,7 @@ class About extends React.Component{
                   <td> Express / Node.js</td>
                 </tr>
                 <tr>
-                  <td>React-HighCharts</td>
+                  <td><a href="https://www.highcharts.com/" target="_blank">React-HighCharts</a></td>
                   <td>Mongoose / Mongodb</td>
                 </tr>
                 <tr>
