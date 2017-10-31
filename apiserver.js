@@ -58,7 +58,7 @@ io.on('connection', function(client){//socket connection
   });
 });
 
-server.listen(3001,function(err){//important must change to server.listen for socket to work!! not app.listen
+server.listen(process.env.PORT || 3001,function(err){//important must change to server.listen for socket to work!! not app.listen
   if(err){
     console.log(err)
   }
