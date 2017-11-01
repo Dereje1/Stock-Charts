@@ -14,8 +14,8 @@ import Addstock from './addstock'
 import Info from './infomodal'
 
 
-//const socket = io('//localhost:3001'); //establish socket connection as public , can not use this address on heroku
-const socket = io();
+//const socket = io('//localhost:3001');  can not use proxxy server with socket on heroku ???
+const socket = io();//establish socket connection as public ,
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -136,7 +136,7 @@ class Home extends Component {
       let configIndexofDeletion = chartConfigCopy.series.findIndex((stock)=>{
         return (nameToDelete===stock.name)
       })
-      //update both state array and config
+      //update both state array and config without mutatting
       let seriesUpdate = [...chartConfigCopy.series.slice(0,configIndexofDeletion),...chartConfigCopy.series.slice(configIndexofDeletion+1)]
       let clientUpdate = [...this.state.dbStocks.slice(0,dbIndexofDeletion),...this.state.dbStocks.slice(dbIndexofDeletion+1)]
       chartConfigCopy.series=seriesUpdate

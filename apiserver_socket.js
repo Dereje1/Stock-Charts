@@ -1,4 +1,4 @@
-"use strict"//primary module to interact with client
+"use strict"//not using this tried to implement with socket included here
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');

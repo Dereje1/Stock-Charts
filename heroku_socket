@@ -1,3 +1,4 @@
+//Proxy server socket trials would not work on heroku 
 http://localhost:3001   -->works locally
 bundle.js:56131 Mixed Content: The page at 'https://dereje-stock-charts.herokuapp.com/' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://localhost:3001/socket.io/?EIO=3&transport=polling&t=LzpWVxr'. This request has been blocked; the content must be served over HTTPS.
 

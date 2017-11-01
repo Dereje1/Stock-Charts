@@ -1,20 +1,18 @@
-"use strict"
-
+"use strict" //displays modal on user interaction
 import React, { Component } from 'react';
-import { Button,Modal} from 'react-bootstrap'//not modal shows warnings in console should be fixed with next update
+import { Button,Modal} from 'react-bootstrap'
 
 class Info extends Component {
   constructor(props) {
     super(props)
-    //initialize modal state and assign params on open
+    //initialize modal show state to false 
     this.state={
       show:false
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-
-    if(prevProps.message!==this.props.message){
+    if(prevProps.message!==this.props.message){//only show if new message in state (home)
       this.setState({show:true})
     }
       //
